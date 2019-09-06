@@ -13,8 +13,7 @@ namespace BCWebApi.Models
         public string Name { get; set; }
         public int StockQuantity { get; set; }
         public decimal Price { get; set; }
-
-        public virtual ICollection<ProductsLog> ProductsLog { get; set; }
-        public virtual ICollection<PriceUpdatedLog> PriceUpdatedLog { get; set; }
+        //public virtual ICollection<ProductsLog> ProductsLog { get; set; }
+        //public virtual ICollection<PriceUpdatedLog> PriceUpdatedLog { get; set; }
     }
 }
