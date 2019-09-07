@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BCWebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class PriceUpdatedLogController : Controller
+    public class PriceUpdatedLogController : BaseController
     {
         private readonly WebApiDBContext _context;
 
@@ -21,35 +21,50 @@ namespace BCWebApi.Controllers
         }
         //Get a list of priceupodatedlog
         [HttpGet]
-        public List<PriceUpdatedLog> Get()
+        public ActionResult<List<PriceUpdatedLog>> Get()
         {
-            return _context.PriceUpdatedLogs.ToList();
+            if (_context.PriceUpdatedLogs.ToList().Count > 0)
+            {
+                return _context.PriceUpdatedLogs.ToList();
+            }
+            var error = returnError("Logs not found", 404);
+            return NotFound(error);
         }
         // GET api/priceupodatedlog/5
         [HttpGet("{id}")]
         public ActionResult<PriceUpdatedLog> Get(int id)
         {
-            return _context.PriceUpdatedLogs.Where(x => x.PriceUpdatedLogId == id).FirstOrDefault();
+            var res = _context.PriceUpdatedLogs.Where(x => x.PriceUpdatedLogId == id).FirstOrDefault();
+            if (res != null)
+            {
+                return res;
+            }
+            var error = returnError("Log not found", 404);
+            return NotFound(error);
         }
 
         // POST api/priceupodatedlog
         [HttpPost]
-        public void Post([FromBody] PriceUpdatedLog productsLog)
+        public IActionResult Post([FromBody] PriceUpdatedLog productsLog)
         {
             try
             {
                 _context.Add(productsLog);
                 _context.SaveChanges();
+                var message = returnError("Log added correctly", 200);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnError(e, 400);
+                return BadRequest(error);
             }
         }
 
         // PUT api/priceupodatedlog
         [HttpPut]
-        public void Put([FromBody] PriceUpdatedLog productsLog)
+        public IActionResult Put([FromBody] PriceUpdatedLog productsLog)
         {
             try
             {
@@ -58,24 +73,31 @@ namespace BCWebApi.Controllers
                 _productsLog.CurrentPrice = productsLog.CurrentPrice;
                 _productsLog.NewPrice = productsLog.NewPrice;
                 _context.SaveChanges();
+                var message = returnError("Product modified correctly", 200);
+                return Ok();
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnError(e, 400);
+                return BadRequest(error);
             }
         }
 
         // DELETE api/priceupodatedlog/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             PriceUpdatedLog productsLog = _context.PriceUpdatedLogs.Find(id);
             if (productsLog == null)
             {
-                return;
+                var error = returnError("Lod does not exist", 404);
+                return NotFound(error);
             }
             _context.PriceUpdatedLogs.Remove(productsLog);
             _context.SaveChanges();
+            var message = returnError("Log deleted correctly", 200);
+            return Ok(message);
         }
     }
 }

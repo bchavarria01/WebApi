@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BCWebApi.Context;
 using BCWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BCWebApi.Controllers
 {
     [Route("api/product")]
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
         private readonly WebApiDBContext _context;
 
@@ -19,35 +20,57 @@ namespace BCWebApi.Controllers
         }
         //Get a list of products
         [HttpGet]
-        public List<Product> Get()
+        public ActionResult<List<Product>> Get()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return _context.Products.ToList();
         }
-        // GET api/values/5
+        // GET api/product/5
         [HttpGet("{id}")]
         public ActionResult<Product> Get(int id)
         {
-            return _context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var res = _context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+            if (res != null)
+            {
+                return res;
+            }
+            var error = returnError("Product not found", 404);
+            return NotFound(error);
         }
 
-        // POST api/values
+        // POST api/product
         [HttpPost]
-        public void Post([FromBody] Product product)
+        public IActionResult Post([FromBody] Product product)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 _context.Add(product);
                 _context.SaveChanges();
+                var message = returnError("Product added correctly", 200);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnError(e, 400);
+                return BadRequest(error);
             }
         }
 
-        // PUT api/values/5
+        // PUT api/product/5
         [HttpPut]
-        public void Put([FromBody] Product product)
+        public IActionResult Put([FromBody] Product product)
         {
             try
             {
@@ -57,24 +80,40 @@ namespace BCWebApi.Controllers
                 _product.Price = product.Price;
                 _context.Products.Update(_product);
                 _context.SaveChanges();
+                var message = returnError("Product modified correctly", 200);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnError(e, 400);
+                return BadRequest(error);
             }
         }
 
-        // DELETE api/values/5
+        // DELETE api/product/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             Product product = _context.Products.Find(id);
             if (product == null)
             {
-                return;
+                var error = returnError("Not found any product with this Id", 404);
+                return NotFound(error);
             }
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            try
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+                var message = returnError("Product deleted correctly", 200);
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                string e = ex.Message;
+                var error = returnError(e, 400);
+                return BadRequest(error);
+            }
         }
     }
 }
