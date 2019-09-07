@@ -41,7 +41,7 @@ namespace BCWebApi.Controllers
             {
                 return res;
             }
-            var error = returnError("Product not found", 404);
+            var error = returnObject("Product not found", 404, 0);
             return NotFound(error);
         }
 
@@ -57,13 +57,13 @@ namespace BCWebApi.Controllers
             {
                 _context.Add(product);
                 _context.SaveChanges();
-                var message = returnError("Product added correctly", 200);
+                var message = returnObject("Product added correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -80,13 +80,13 @@ namespace BCWebApi.Controllers
                 _product.Price = product.Price;
                 _context.Products.Update(_product);
                 _context.SaveChanges();
-                var message = returnError("Product modified correctly", 200);
+                var message = returnObject("Product modified correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -98,20 +98,20 @@ namespace BCWebApi.Controllers
             Product product = _context.Products.Find(id);
             if (product == null)
             {
-                var error = returnError("Not found any product with this Id", 404);
+                var error = returnObject("Not found any product with this Id", 404, 0);
                 return NotFound(error);
             }
             try
             {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
-                var message = returnError("Product deleted correctly", 200);
+                var message = returnObject("Product deleted correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }

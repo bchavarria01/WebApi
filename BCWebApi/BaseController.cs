@@ -8,17 +8,15 @@ namespace BCWebApi
         public BaseController()
         {
         }
-        public object returnError(string _message, int _code)
+        public object returnObject(string _message, int _code, int type)
         {
-            var model = new
+            var okMessage = new { ok = new { code = _code, message = _message } };
+            var model = new { error = new { code = _code, message = _message } };
+            if (type == 0)
             {
-                error = new
-                {
-                    code = _code,
-                    message = _message
-                }
-            };
-            return model;
+                return model;
+            }
+            return okMessage;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace BCWebApi.Controllers
             {
                 return _context.ProductsLogs.ToList();
             }
-            var error = returnError("Logs not found", 404);
+            var error = returnObject("Logs not found", 404, 0);
             return NotFound(error);
         }
         // GET api/productslog/5
@@ -39,7 +39,7 @@ namespace BCWebApi.Controllers
             {
                 return res;
             }
-            var error = returnError("Log not found", 404);
+            var error = returnObject("Log not found", 404, 0);
             return NotFound(error);
         }
 
@@ -52,13 +52,13 @@ namespace BCWebApi.Controllers
                 productsLog.BuyingDate = DateTime.Now;
                 _context.Add(productsLog);
                 _context.SaveChanges();
-                var message = returnError("Log added correctly", 200);
+                var message = returnObject("Log added correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -73,13 +73,13 @@ namespace BCWebApi.Controllers
                 _productsLog.UserId = productsLog.UserId;
                 _productsLog.ProductId = productsLog.ProductId;
                 _context.SaveChanges();
-                var message = returnError("Log modified correctly", 200);
+                var message = returnObject("Log modified correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -91,12 +91,12 @@ namespace BCWebApi.Controllers
             ProductsLog productsLog = _context.ProductsLogs.Find(id);
             if (productsLog == null)
             {
-                var error = returnError("Log not found", 404);
+                var error = returnObject("Log not found", 404, 0);
                 return NotFound(error);
             }
             _context.ProductsLogs.Remove(productsLog);
             _context.SaveChanges();
-            var message = returnError("Log deleted correctly", 200);
+            var message = returnObject("Log deleted correctly", 200, 1);
             return Ok(message);
         }
     }

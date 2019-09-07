@@ -27,7 +27,7 @@ namespace BCWebApi.Controllers
             {
                 return _context.PriceUpdatedLogs.ToList();
             }
-            var error = returnError("Logs not found", 404);
+            var error = returnObject("Logs not found", 404, 0);
             return NotFound(error);
         }
         // GET api/priceupodatedlog/5
@@ -39,7 +39,7 @@ namespace BCWebApi.Controllers
             {
                 return res;
             }
-            var error = returnError("Log not found", 404);
+            var error = returnObject("Log not found", 404, 0);
             return NotFound(error);
         }
 
@@ -51,13 +51,13 @@ namespace BCWebApi.Controllers
             {
                 _context.Add(productsLog);
                 _context.SaveChanges();
-                var message = returnError("Log added correctly", 200);
+                var message = returnObject("Log added correctly", 200, 1);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -73,13 +73,13 @@ namespace BCWebApi.Controllers
                 _productsLog.CurrentPrice = productsLog.CurrentPrice;
                 _productsLog.NewPrice = productsLog.NewPrice;
                 _context.SaveChanges();
-                var message = returnError("Product modified correctly", 200);
-                return Ok();
+                var message = returnObject("log modified correctly", 200, 1);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
-                var error = returnError(e, 400);
+                var error = returnObject(e, 400, 0);
                 return BadRequest(error);
             }
         }
@@ -91,12 +91,12 @@ namespace BCWebApi.Controllers
             PriceUpdatedLog productsLog = _context.PriceUpdatedLogs.Find(id);
             if (productsLog == null)
             {
-                var error = returnError("Lod does not exist", 404);
+                var error = returnObject("Lod does not exist", 404, 0);
                 return NotFound(error);
             }
             _context.PriceUpdatedLogs.Remove(productsLog);
             _context.SaveChanges();
-            var message = returnError("Log deleted correctly", 200);
+            var message = returnObject("Log deleted correctly", 200, 1);
             return Ok(message);
         }
     }

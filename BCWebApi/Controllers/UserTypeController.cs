@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BCWebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class UserTypeController : Controller
+    public class UserTypeController : BaseController
     {
         private readonly WebApiDBContext _context;
 
@@ -20,59 +20,82 @@ namespace BCWebApi.Controllers
         }
         //Get a list of products
         [HttpGet]
-        public List<UserType> Get()
+        public ActionResult<List<UserType>> Get()
         {
-            return _context.UserTypes.ToList();
+            var lstUserTypes = _context.UserTypes.ToList();
+            if (lstUserTypes.Count > 0)
+            {
+                return lstUserTypes;
+            }
+            var error = returnObject("Can't find any user type", 404, 0);
+            return NotFound(error);
         }
         // GET api/usertype/5
         [HttpGet("{id}")]
         public ActionResult<UserType> Get(int id)
         {
-            return _context.UserTypes.Where(x => x.UserTypeId == id).FirstOrDefault();
+            var res = _context.UserTypes.Where(x => x.UserTypeId == id).FirstOrDefault();
+            if (res != null)
+            {
+                return res;
+            }
+            var error = returnObject("User type not found", 404, 0);
+            return NotFound(error);
         }
 
         // POST api/usertype
         [HttpPost]
-        public void Post([FromBody] UserType user)
+        public IActionResult Post([FromBody] UserType user)
         {
             try
             {
                 _context.Add(user);
                 _context.SaveChanges();
+                var message = returnObject("User type added correctly", 200, 1);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnObject(e, 400, 0);
+                return BadRequest(error);
             }
         }
 
         // PUT api/usertype
         [HttpPut]
-        public void Put([FromBody] UserType user)
+        public IActionResult Put([FromBody] UserType user)
         {
             try
             {
                 UserType _user = _context.UserTypes.FirstOrDefault(x => x.UserTypeId == user.UserTypeId);
                 _user.UserTypeName = user.UserTypeName;
                 _context.SaveChanges();
+                var message = returnObject("User type modified correctly", 200, 1);
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 string e = ex.Message;
+                var error = returnObject(e, 400, 0);
+                return BadRequest(error);
             }
         }
 
         // DELETE api/usertype/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             UserType user = _context.UserTypes.Find(id);
             if (user == null)
             {
-                return;
+                var error = returnObject("User type not found", 404, 0);
+                return NotFound(error);
             }
             _context.UserTypes.Remove(user);
             _context.SaveChanges();
+            var message = returnObject("User type deleted correctly", 200, 1);
+            return Ok(message);
         }
     }
 }
