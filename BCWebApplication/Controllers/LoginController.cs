@@ -18,7 +18,7 @@ namespace BCWebApplication.Controllers
     {
         const string SessionName = "_Name";
         const string SessionType = "_UserType";
-        List<User> lstUsers = new List<User>();
+        static List<User> lstUsers = new List<User>();
         WebApi _api = new WebApi();
         public LoginController()
         {
@@ -47,6 +47,7 @@ namespace BCWebApplication.Controllers
         [HttpPost]
         public ActionResult Create(User modelo)
         {
+            _ = GetUsersAsync();
             try
             {
                 if (ModelState.IsValid)
@@ -54,21 +55,28 @@ namespace BCWebApplication.Controllers
                     var user = lstUsers.FirstOrDefault(x => x.UserName == modelo.UserName && x.UserPassword == modelo.UserPassword);
                     if (user == null)
                     {
-                        return View();
+                        return RedirectToAction("Index", "Login");
                     }
                     HttpContext.Session.SetString(SessionName, user.UserName);
-                    HttpContext.Session.SetInt32(SessionType, user.UserTypeId);
+                    HttpContext.Session.SetString(SessionType, user.UserTypeId.ToString());
                     return RedirectToAction("Index", "Home");
                 }
-                return View();
+                return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
 
                 ViewData["mensaje"] = ex.Message;
-                return View(modelo);
+                return RedirectToAction("Index", "Login");
             }
 
+        }
+        public ActionResult CloseSession()
+        {
+            //HttpContext.Session.SetString(SessionName, "");
+            //HttpContext.Session.SetString(SessionType, "");
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Login");
         }
     }
 }

@@ -56,7 +56,6 @@ namespace BCWebApplication.Controllers
                     ViewData["mensaje"] = "La cuenta ha sido agregada exitosamente";
                     Product product = new Product();
                     HttpClient client = _api.Initial();
-                    //HttpResponseMessage res = await client.GetAsync("api/product/" + id);
                     var model = JsonConvert.SerializeObject(modelo);
                     HttpContent content = new StringContent(model, Encoding.UTF8, "application/json");
                     var url = new Uri(client.BaseAddress + "api/product");
@@ -70,7 +69,6 @@ namespace BCWebApplication.Controllers
             }
             catch (Exception ex)
             {
-
                 ViewData["mensaje"] = ex.Message;
                 return View(modelo);
             }
@@ -78,12 +76,22 @@ namespace BCWebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product modelo)
+        public async Task<ActionResult> Edit(Product modelo)
         {
             if (ModelState.IsValid)
             {
-                ViewData["mensaje"] = "Product modified correctly";
-                return RedirectToAction("Index");
+                ViewData["mensaje"] = "La cuenta ha sido agregada exitosamente";
+                Product product = new Product();
+                HttpClient client = _api.Initial();
+                //HttpResponseMessage res = await client.GetAsync("api/product/" + id);
+                var model = JsonConvert.SerializeObject(modelo);
+                HttpContent content = new StringContent(model, Encoding.UTF8, "application/json");
+                var url = new Uri(client.BaseAddress + "api/product");
+                HttpResponseMessage res = await client.PutAsync(url, content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
             }
             return View(modelo);
         }
@@ -97,7 +105,44 @@ namespace BCWebApplication.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return View();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Shop(Product modelo)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Product product = new Product();
+                    HttpClient client = _api.Initial();
+                    var model = JsonConvert.SerializeObject(modelo);
+                    HttpContent content = new StringContent(model, Encoding.UTF8, "application/json");
+                    var url = new Uri(client.BaseAddress + "api/product");
+                    HttpResponseMessage res = await client.PostAsync(url, content);
+                    if (res.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+                return View(modelo);
+            }
+            catch (Exception ex)
+            {
+                ViewData["mensaje"] = ex.Message;
+                return View(modelo);
+            }
+
+        }
+
+        private void CreateShopLog(int productId, int userId)
+        {
+
+        }
+        private void CreatePriceLog(int productId, decimal currentPrice, decimal newPrice)
+        {
+
         }
     }
 }

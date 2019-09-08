@@ -1,7 +1,10 @@
 ﻿@{
     var sessionName = new Byte[20];
+    var sessionType = new Byte[20];
     bool name = Context.Session.TryGetValue("_Name", out sessionName);
-    string result = name ? System.Text.Encoding.UTF8.GetString(sessionName) : "";
+    bool type = Context.Session.TryGetValue("_UserType", out sessionType);
+    string resultName = name ? System.Text.Encoding.UTF8.GetString(sessionName) : "";
+    string resultType = type ? System.Text.Encoding.UTF8.GetString(sessionType) : "";
 }
 <!DOCTYPE html>
 <html>
@@ -21,7 +24,7 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="~/src/dist/css/AdminLTE.min.css">
         <!-- AdminLTE Skins. Choose a skin from the css/skins
-     folder instead of downloading all of them to reduce the load. -->
+    |   folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="~/src/dist/css/skins/_all-skins.min.css">
         <!-- Morris chart -->
         <link rel="stylesheet" href="~/src/bower_components/morris.js/morris.css">
@@ -34,6 +37,8 @@
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="~/src/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
         <link rel="stylesheet" href="~/node_modules/sweetalert2/dist/sweetalert2.min.css">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="~/src/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -70,7 +75,7 @@
                         <img src="~/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>@result</p>
+                        <p>@resultName</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -91,14 +96,16 @@
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active treeview">
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            <i class="fa fa-dashboard"></i> <span>Options</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
+                        @{ var className = resultType != "1" ? "hidden" : ""; }}
                         <ul class="treeview-menu">
-                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Products</a></li>
-                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Users</a></li>
+                            <li class="active"><a href="@Url.Action("Index", "Product")"><i class="fa fa-circle-o"></i> Products</a></li>
+                            <li class="@className"><a href="@Url.Action("Index", "User")"><i class="fa fa-circle-o"></i> Users</a></li>
+                            <li><a href="@Url.Action("CloseSession", "Login")"><i class="fa fa-circle-o"></i> Close session</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -115,14 +122,14 @@
                         <img src="~/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>@result</p>
+                        <p>@resultName</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <!-- search form -->
                 <form action="#" method="get" class="sidebar-form">
                     <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
+                        <input type="text" name="q" class="form-control" placeholder="Search... (Not available)">
                         <span class="input-group-btn">
                             <button type="submit" name="search" id="search-btn" class="btn btn-flat">
                                 <i class="fa fa-search"></i>
@@ -135,14 +142,15 @@
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="active treeview">
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            <i class="fa fa-dashboard"></i> <span>Options</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
                             <li class="active"><a href="@Url.Action("Index", "Product")"><i class="fa fa-circle-o"></i> Products</a></li>
-                            <li><a href="@Url.Action("Index", "User")"><i class="fa fa-circle-o"></i> Users</a></li>
+                            <li class="@className"><a href="@Url.Action("Index", "User")"><i class="fa fa-circle-o"></i> Users</a></li>
+                            <li><a href="@Url.Action("CloseSession", "Login")"><i class="fa fa-circle-o"></i> Close session</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -205,6 +213,22 @@
             <!-- AdminLTE for demo purposes -->
             <script src="~/src/dist/js/demo.js"></script>
             <script src="~/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+            <!-- DataTables -->
+            <script src="~/src/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+            <script src="~/src/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+            <script>
+                $(function () {
+                    $('.dataTable').DataTable();
+                    //$('#example2').DataTable({
+                    //    'paging': true,
+                    //    'lengthChange': false,
+                    //    'searching': false,
+                    //    'ordering': true,
+                    //    'info': true,
+                    //    'autoWidth': false
+                    //})
+                })
+            </script>
         </environment>
         <environment exclude="Development">
             <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"

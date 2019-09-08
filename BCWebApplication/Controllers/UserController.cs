@@ -99,12 +99,22 @@ namespace BCWebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User modelo)
+        public async Task<ActionResult> Edit(User modelo)
         {
             if (ModelState.IsValid)
             {
-                ViewData["mensaje"] = "User modified correctly";
-                return RedirectToAction("Index");
+                ViewData["mensaje"] = "";
+                Product product = new Product();
+                HttpClient client = _api.Initial();
+                //HttpResponseMessage res = await client.GetAsync("api/product/" + id);
+                var model = JsonConvert.SerializeObject(modelo);
+                HttpContent content = new StringContent(model, Encoding.UTF8, "application/json");
+                var url = new Uri(client.BaseAddress + "api/user");
+                HttpResponseMessage res = await client.PutAsync(url, content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
             }
             return View(modelo);
         }
