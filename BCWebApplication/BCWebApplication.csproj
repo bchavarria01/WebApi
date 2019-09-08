@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\User\Edit.cshtml" />
+    <Content Remove="Views\User\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="wwwroot\src\bower_components\bootstrap-colorpicker\.bower.json" />
     <Content Include="wwwroot\src\bower_components\bootstrap-colorpicker\composer.json" />
     <Content Include="wwwroot\src\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
@@ -6626,7 +6630,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="$(AspNetCoreAppRuntimeFrameworkVersion)">
+      <IsImplicitlyDefined>true</IsImplicitlyDefined>
+      <PrivateAssets>All</PrivateAssets>
+      <Publish>true</Publish>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
   </ItemGroup>
 
@@ -6638,4 +6646,8 @@
     <TypeScriptCompile Include="wwwroot\src\bower_components\moment\moment.d.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\User\" />
+    <Folder Include="Views\Login\" />
+  </ItemGroup>
 </Project>
