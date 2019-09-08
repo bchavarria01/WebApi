@@ -1,0 +1,16 @@
+﻿@{
+    var titulo = "";
+    if (ViewData["titulo"] == null || ViewData["titulo"].ToString() == "")
+    {
+        titulo = "Correcto!";
+    }
+    else
+    {
+        titulo = ViewData["titulo"].ToString();
+    }
+
+}
+<div class="alert alert-success alert - dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" id="result">×</button>
+    <h4><i class="icon fa fa-check"></i>@titulo</h4>@ViewData["mensaje"]
+</div>

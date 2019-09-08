@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using BCWebApi.Models;
 using BCWebApplication.Helper;
@@ -29,7 +30,7 @@ namespace BCWebApplication.Controllers
         public ActionResult Create()
         {
             var product = new Product();
-            return PartialView(product);
+            return View(product);
         }
 
         public async Task<IActionResult> Edit(string id)
@@ -42,30 +43,36 @@ namespace BCWebApplication.Controllers
                 var result = res.Content.ReadAsStringAsync().Result;
                 product = JsonConvert.DeserializeObject<Product>(result);
             }
-            return PartialView(product);
+            return View(product);
         }
 
         [HttpPost]
-        public ActionResult Create(Product modelo)
+        public async Task<ActionResult> Create(Product modelo)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     ViewData["mensaje"] = "La cuenta ha sido agregada exitosamente";
-                    return PartialView("_AlertSuccess");
+                    Product product = new Product();
+                    HttpClient client = _api.Initial();
+                    //HttpResponseMessage res = await client.GetAsync("api/product/" + id);
+                    var model = JsonConvert.SerializeObject(modelo);
+                    HttpContent content = new StringContent(model, Encoding.UTF8, "application/json");
+                    var url = new Uri(client.BaseAddress + "api/product");
+                    HttpResponseMessage res = await client.PostAsync(url, content);
+                    if (res.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
                 }
-                else
-                {
-                    ViewData["mensaje"] = "Error en la inserción de datos";
-                    return PartialView("_AlertFailure");
-                }
+                return View(modelo);
             }
             catch (Exception ex)
             {
 
-                ViewData["mensaje"] = "Error en la inserción de datos";
-                return PartialView("_AlertFailure");
+                ViewData["mensaje"] = ex.Message;
+                return View(modelo);
             }
 
         }
@@ -73,7 +80,24 @@ namespace BCWebApplication.Controllers
         [HttpPost]
         public ActionResult Edit(Product modelo)
         {
-            return PartialView(modelo);
+            if (ModelState.IsValid)
+            {
+                ViewData["mensaje"] = "Product modified correctly";
+                return RedirectToAction("Index");
+            }
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(string id)
+        {
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.DeleteAsync("api/product/" + id);
+            if (res.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }
