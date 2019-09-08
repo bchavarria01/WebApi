@@ -15,6 +15,8 @@ WebApi and WebApplication develop with .Net Core
 
 . Inputmask
 
+. SweetAlert
+
 ## Technologies
 
 - .Net Core
