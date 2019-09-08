@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var sessionName = new Byte[20];
+    bool name = Context.Session.TryGetValue("_Name", out sessionName);
+    string result = name ? System.Text.Encoding.UTF8.GetString(sessionName) : "";
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -64,7 +69,7 @@
                         <img src="~/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Alexander Pierce</p>
+                        <p>@result</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -109,7 +114,7 @@
                         <img src="~/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Alexander Pierce</p>
+                        <p>@result</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>

@@ -3,11 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\User\Edit.cshtml" />
-    <Content Remove="Views\User\Index.cshtml" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="wwwroot\src\bower_components\bootstrap-colorpicker\.bower.json" />
     <Content Include="wwwroot\src\bower_components\bootstrap-colorpicker\composer.json" />
@@ -6647,7 +6642,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\User\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
 </Project>
