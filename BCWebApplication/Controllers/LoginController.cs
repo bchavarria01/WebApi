@@ -40,7 +40,7 @@ namespace BCWebApplication.Controllers
         {
             if (HttpContext.Session.GetString(SessionName) != null)
             {
-                return RedirectToAction("Home/Index");
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }

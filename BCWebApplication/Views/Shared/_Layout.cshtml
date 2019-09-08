@@ -21,7 +21,7 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="~/src/dist/css/AdminLTE.min.css">
         <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
+     folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="~/src/dist/css/skins/_all-skins.min.css">
         <!-- Morris chart -->
         <link rel="stylesheet" href="~/src/bower_components/morris.js/morris.css">
@@ -33,6 +33,7 @@
         <link rel="stylesheet" href="~/src/bower_components/bootstrap-daterangepicker/daterangepicker.css">
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="~/src/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+        <link rel="stylesheet" href="~/node_modules/sweetalert2/dist/sweetalert2.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -47,9 +48,9 @@
             <!-- Logo -->
             <a href="index2.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
+                <span class="logo-mini"><b>B</b>WA</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Admin</b>LTE</span>
+                <span class="logo-lg"><b>BC</b>WebApi</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -132,7 +133,6 @@
                 <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">MAIN NAVIGATION</li>
                     <li class="active treeview">
                         <a href="#">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -141,8 +141,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Products</a></li>
-                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Users</a></li>
+                            <li class="active"><a href="@Url.Action("Index", "Product")"><i class="fa fa-circle-o"></i> Products</a></li>
+                            <li><a href="@Url.Action("Index", "User")"><i class="fa fa-circle-o"></i> Users</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -204,6 +204,7 @@
             <script src="~/src/dist/js/pages/dashboard.js"></script>
             <!-- AdminLTE for demo purposes -->
             <script src="~/src/dist/js/demo.js"></script>
+            <script src="~/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
         </environment>
         <environment exclude="Development">
             <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"

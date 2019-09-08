@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BCWebApplication.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace BCWebApplication.Controllers
 {
@@ -12,7 +13,11 @@ namespace BCWebApplication.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("_Name") != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Login");
         }
     }
 }

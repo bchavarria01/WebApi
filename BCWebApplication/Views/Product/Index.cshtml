@@ -55,6 +55,7 @@
                                     </td>
                                     <td>
                                         <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+                                        <a asp-action="Shop" asp-route-id="@item.ProductId" class="btn btn-warning"><i class="fa fa-cart-plus"></i></a>
                                         <a onclick="deleteProduct(@item.ProductId)" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
                                     </td>
                                 </tr>
@@ -71,14 +72,61 @@
 </div>
 <script>
     function deleteProduct(id) {
-        $.ajax({
-            type:"POST",
-            url: "@Url.Action("Delete", "Product")",
-            data:{id: id},
-            success:function(datos){
-                alert("Product deleted correctly");
-                location.reload();
-            }
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'No, cancel!',
+          reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+              $.ajax({
+                type:"POST",
+                url: "@Url.Action("Delete", "Product")",
+                data:{id: id},
+                success:function(datos){
+                    swalWithBootstrapButtons.fire({
+                      title: 'Product deleted',
+                      text: "",
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Ok! ',
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload()
+                      } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                      ) {
+                        swalWithBootstrapButtons.fire(
+                          'Cancelled',
+                          'Your imaginary file is safe :)',
+                          'error'
+                        )
+                      }
+                    })
+                }
+            })
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire(
+              'Cancelled',
+              'Your imaginary file is safe :)',
+              'error'
+            )
+          }
         })
     }
 </script>
