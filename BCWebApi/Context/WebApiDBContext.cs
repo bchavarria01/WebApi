@@ -20,5 +20,16 @@ namespace BCWebApi.Context
         public DbSet<ProductsLog> ProductsLogs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
-    }
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<UserType>().HasData(
+				new UserType() { UserTypeId = 1, UserTypeName = "Admin" },
+				new UserType() { UserTypeId = 2, UserTypeName = "Customer" }
+			);
+			modelBuilder.Entity<User>().HasData(
+				new User() { UserId = 1, UserTypeId = 1, UserName = "Admin", UserPassword = "root" },
+				new User() { UserId = 2, UserTypeId = 2, UserName = "Armando", UserPassword = "root" }
+			);
+		}
+	}
 }
