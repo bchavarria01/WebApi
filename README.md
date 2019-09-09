@@ -47,5 +47,7 @@ WebApi and WebApplication develop with .Net Core
    
    To do that: make a right click on the Solution name on Visual Studio and then click on "Set StartUp Projects..." and select "Multiple startup project"
    , in the Action Column select Start in both projects.
+
+6. Go to WebApi project properties and copy the base URL for the WebApi and paste it on the Helper "WebApi" in the WebApplication project.
    
-6. Now just click on run and thats it.
+7. Now just click on run and thats it.
